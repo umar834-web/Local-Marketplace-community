@@ -21,11 +21,11 @@ import { useMobile } from "@/hooks/use-mobile"
 
 export default function Header() {
   const { user } = useAuth()
-  const { cart } = useCart()
+  const { state } = useCart()
   const isMobile = useMobile()
   const [isSearchOpen, setIsSearchOpen] = useState(false)
 
-  const cartItemsCount = cart.reduce((total, item) => total + item.quantity, 0)
+  const cartItemsCount = state.items.reduce((total, item) => total + item.quantity, 0)
 
   const handleSignOut = async () => {
     await signOut()

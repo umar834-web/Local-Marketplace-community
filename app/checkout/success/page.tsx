@@ -1,28 +1,30 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
 import { CheckCircle } from "lucide-react"
 import Link from "next/link"
 
 export default function CheckoutSuccessPage() {
   return (
-    <div className="container px-4 md:px-6 py-16 text-center">
-      <div className="max-w-md mx-auto">
+    <div className="container mx-auto py-12 px-4">
+      <div className="max-w-md mx-auto text-center">
         <div className="flex justify-center mb-6">
-          <CheckCircle className="h-16 w-16 text-green-500" />
+          <CheckCircle className="h-24 w-24 text-green-500" />
         </div>
-
-        <h1 className="text-3xl font-bold tracking-tight mb-4">Order Confirmed!</h1>
-        <p className="text-gray-500 mb-8">
-          Thank you for your order. We've sent a confirmation email with all the details. Your items will be delivered
-          soon!
+        <h1 className="text-3xl font-bold mb-2">Order Successful!</h1>
+        <p className="text-gray-600 mb-8">
+          Thank you for your purchase. Your order has been received and is being processed.
         </p>
-
+        <p className="text-gray-600 mb-8">
+          You will receive an email confirmation shortly with order details.
+        </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/products">
-            <Button variant="outline">Continue Shopping</Button>
-          </Link>
-          <Link href="/account/orders">
-            <Button>View Order</Button>
-          </Link>
+          <Button asChild>
+            <Link href="/products">Continue Shopping</Link>
+          </Button>
+          <Button variant="outline" asChild>
+            <Link href="/account/orders">View Orders</Link>
+          </Button>
         </div>
       </div>
     </div>

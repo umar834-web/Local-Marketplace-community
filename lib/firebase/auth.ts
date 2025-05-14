@@ -6,37 +6,52 @@ import {
   updatePassword as firebaseUpdatePassword,
   EmailAuthProvider,
   reauthenticateWithCredential,
+  onAuthStateChanged,
+  type User
 } from "firebase/auth"
 import { auth } from "./config"
 import { doc, setDoc } from "firebase/firestore"
 import { db } from "./config"
 
-export const signUp = async (email: string, password: string, name: string) => {
-  const userCredential = await createUserWithEmailAndPassword(auth, email, password)
-  const user = userCredential.user
+export async function signUp(email: string, password: string, name: string) {
+  try {
+    const result = await createUserWithEmailAndPassword(auth, email, password)
+    const user = result.user
 
-  // Update profile with display name
-  await firebaseUpdateProfile(user, {
-    displayName: name,
-  })
+    // Update profile with display name
+    await firebaseUpdateProfile(user, {
+      displayName: name,
+    })
 
-  // Create user document in Firestore
-  await setDoc(doc(db, "users", user.uid), {
-    name,
-    email,
-    createdAt: new Date(),
-  })
+    // Create user document in Firestore
+    await setDoc(doc(db, "users", user.uid), {
+      name,
+      email,
+      createdAt: new Date(),
+    })
 
-  return user
+    return { user, error: null }
+  } catch (error) {
+    return { user: null, error: error as Error }
+  }
 }
 
-export const signIn = async (email: string, password: string) => {
-  const userCredential = await signInWithEmailAndPassword(auth, email, password)
-  return userCredential.user
+export async function signIn(email: string, password: string) {
+  try {
+    const result = await signInWithEmailAndPassword(auth, email, password)
+    return { user: result.user, error: null }
+  } catch (error) {
+    return { user: null, error: error as Error }
+  }
 }
 
-export const signOut = async () => {
-  await firebaseSignOut(auth)
+export async function signOut() {
+  try {
+    await firebaseSignOut(auth)
+    return { error: null }
+  } catch (error) {
+    return { error: error as Error }
+  }
 }
 
 export const updateProfile = async (name: string) => {
@@ -73,4 +88,8 @@ export const updatePassword = async (currentPassword: string, newPassword: strin
 
   // Update password
   await firebaseUpdatePassword(user, newPassword)
+}
+
+export function onAuthStateChange(callback: (user: User | null) => void) {
+  return onAuthStateChanged(auth, callback)
 }
